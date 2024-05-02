@@ -1,0 +1,51 @@
+﻿
+
+<EditForm Model= "machinery" OnInvalidSubmit= "OnSubmit">
+
+
+    <DataAnnotationsValidator/>
+
+    <div class ="mb-3">
+
+        <label>machinerys</label>
+
+        <div >
+
+            <InputText class="form-control " @bind-Value="machinery."></InputText>
+
+           
+            
+
+        </div>
+
+    </div>
+
+</EditForm> 
+
+
+
+
+
+
+
+@code {
+
+    
+    [Parameter]
+
+    public machinery Machinery { get; set; }
+
+    
+    
+    [Parameter]
+
+    public EventCallback
+
+    [EditorRequiered]
+    [Parameter]
+
+    public EventCallback
+
+
+
+}

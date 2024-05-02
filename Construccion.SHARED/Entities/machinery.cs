@@ -15,6 +15,8 @@ namespace construccion.Shared.Entities
         [MaxLength(20, ErrorMessage = "No se permiten más de 20 dígitos")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]
         string name { get; set; }
+
+
         [Display(Name = "Cantidad Requerida")]
         [MaxLength(20, ErrorMessage = "No se permiten más de 20 dígitos")]
         [Required(ErrorMessage = "El campo {0} es obligatorio")]

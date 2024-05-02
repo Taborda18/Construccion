@@ -1,0 +1,76 @@
+﻿@page "/machinery"
+@using Construccion.WEB.Repositories
+@using construccion.Shared.Entities
+
+
+
+<h3>Maquinaria</h3>
+
+
+@inject IRepository Repository
+
+<div class="m-3 ">
+
+
+
+    <a class=" btn btn-primary" href="/machinery/create"></a>
+
+</div>
+
+<GenericList MyList="machinerys">
+
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>machinery</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var machinery in machinerys!)
+                {
+                    <tr>
+                        <td>
+                            @machinery.CantReque
+
+                        </td>
+                        <td>
+                            @machinery.Proveed
+                        </td>
+                        <td>
+                            @machinery.FechaEntrga
+                        </td>
+                        <a class="btn btn-warning">Editar</a>
+                        <button class="btn btn-danger">Borrar</button>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </Body>
+
+</GenericList>
+
+
+
+
+
+@code {
+
+    public List<machinery>? machinerys { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        var responseHttp = await Repository.GetAsync<List<machinery>>("/api/machinery");
+
+        machinerys = responseHttp.Response!;
+
+
+
+    }
+
+}
