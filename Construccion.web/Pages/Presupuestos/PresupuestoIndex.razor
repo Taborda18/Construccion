@@ -1,0 +1,104 @@
+﻿@page "/Presupuestos"
+@using construccion.Shared.Entities
+@using Construccion.WEB.Repositories
+@using Construccion.WEB.Shared
+@inject SweetAlertService sweetAlertService
+@inject NavigationManager navigationManager
+@inject IRepository repository
+
+<h1>Presupuestos</h1>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/Presupuestos/create">Nuevo Presupuesto</a>
+</div>
+
+<GenericList MyList="Presupuestos">
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Presupuesto</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var presupuesto in Presupuestos!)
+                {
+                    <tr>
+         
+                        <td>@presupuesto.ManoObra</td>
+                        <td>@presupuesto.Material</td>
+                        <td>@presupuesto.Maquinaria</td>
+                        <td>@presupuesto.Otros</td>
+                        <td>
+                            <a href="/Presupuestos/editar/@presupuesto.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
+                            <button @onclick=@(() => DeleteAsync(presupuesto)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </Body>
+</GenericList>
+
+@code {
+    public List<Presupuesto> Presupuestos { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        var responseHttp = await repository.GetAsync<List<Presupuesto>>("/api/Presupuestos");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        Presupuestos = responseHttp.Response;
+    }
+
+    private async Task DeleteAsync(Presupuesto presupuesto)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Estás seguro de querer borrar el presupuesto con Id: {presupuesto.id}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+            });
+
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        {
+            return;
+        }
+
+        var responseHttp = await repository.DeleteAsync<Presupuesto>($"/api/Presupuestos/{presupuesto.id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("Presupuestos");
+            }
+            else
+            {
+                var errorMessage = await responseHttp.GetErrorMessage();
+                await sweetAlertService.FireAsync("Error", errorMessage, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Presupuesto borrado con éxito.");
+    }
+}

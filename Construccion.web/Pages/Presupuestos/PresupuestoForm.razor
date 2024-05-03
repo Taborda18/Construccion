@@ -23,6 +23,12 @@
         </div>
     </div>
 
+
+
+
+
+
+
     <div class="mb-3">
         <label>Maquinaria:  </label>
         <div>
@@ -35,6 +41,14 @@
         <div>
             <InputNumber width="10" @bind-Value="Presupuesto.Otros" />
             <ValidationMessage For="@(()=>Presupuesto.Otros)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>:  </label>
+        <div>
+            <InputNumber width="10" @bind-Value="Presupuesto.ProjectConstrId" />
+            <ValidationMessage For="@(()=>Presupuesto.ProjectConstrId)" />
         </div>
     </div>
 

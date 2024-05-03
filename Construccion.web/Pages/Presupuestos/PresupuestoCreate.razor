@@ -1,0 +1,41 @@
+﻿@page "/presupuestos/create"
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService sweetAlertService
+
+<h3>Crear Presupuesto</h3>
+
+<PresupuestoForm @ref="presupuestoForm" Presupuesto="presupuesto" OnSubmit="Create" ReturnAction="Return" />
+
+@code {
+    private Presupuesto presupuesto = new();
+    private PresupuestoForm presupuestoForm;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/Presupuestos", presupuesto);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertService.FireAsync("Error", message);
+            return;
+        }
+
+        Return();
+
+        var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Presupuesto creado con éxito");
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/presupuestos");
+    }
+}
