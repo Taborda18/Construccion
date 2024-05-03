@@ -1,6 +1,9 @@
 ﻿@page "/Machinerys"
 @using Construccion.WEB.Repositories
 @using construccion.Shared.Entities
+@inject IRepository repository
+@inject SweetAlertService sweetAlertService
+@inject NavigationManager navigationManager
 
 
 
@@ -75,6 +78,61 @@
 
 
 
+    }
+
+
+
+    private async Task LoadAsync()
+    {
+        var responseHttp = await repository.GetAsync<List<EquiCons>>("/api/EquiConss");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        EquiConss = responseHttp.Response;
+    }
+    private async Task DeleteAsycn(EquiCons equicons)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {equicons.Nombre}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+
+        {
+            return;
+        }
+
+        var responseHttp = await repository.DeleteAsync<EquiCons>($"/api/EquiConss/{equicons.id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("EquiConss");
+            }
+            else
+            {
+                var mensajeError = await responseHttp.GetErrorMessage();
+                await sweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
     }
 
 }
