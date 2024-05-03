@@ -4,82 +4,71 @@
 @inject SweetAlertService sweetAlertService
 @inject IRepository repository
 
-<EditForm Model="Presupuesto" OnSubmit="OnSubmit">
-    <DataAnnotationsValidator/>
+<EditForm Model="Materiales" OnSubmit="OnSubmit">
+
+    <DataAnnotationsValidator />
 
     <div class="mb-3">
-       
+        <label>Nombre:  </label>
         <div>
-            <label>Mano de obra:  </label>
-            <InputNumber width="10" @bind-Value="Presupuesto.ManoObra" />
-            <ValidationMessage For="@(()=>Presupuesto.ManoObra)" />
+            <InputText width="10" @bind-Value="Materiales.Nombre" />
+            <ValidationMessage For="@(()=>Materiales.Nombre)" />
         </div>
     </div>
 
     <div class="mb-3">
-        <label>Materiales:  </label>
+        <label>Cantidad:  </label>
         <div>
-            <InputNumber width="10" @bind-Value="Presupuesto.Material" />
-            <ValidationMessage For="@(()=>Presupuesto.Material)" />
-        </div>
-    </div>
-
-
-
-
-
-
-
-    <div class="mb-3">
-        <label>Maquinaria:  </label>
-        <div>
-            <InputNumber width="10" @bind-Value="Presupuesto.Maquinaria" />
-            <ValidationMessage For="@(()=>Presupuesto.Maquinaria)" />
-        </div>
-    </div>
-    <div class="mb-3">
-        <label>Otros:  </label>
-        <div>
-            <InputNumber width="10" @bind-Value="Presupuesto.Otros" />
-            <ValidationMessage For="@(()=>Presupuesto.Otros)" />
+            <InputNumber @bind-Value="Materiales.Cantidad" />
+            <ValidationMessage For="@(()=>Materiales.Cantidad)" />
         </div>
     </div>
 
     <div class="mb-3">
-        <label>Proyecto de construcción:  </label>
+        <label>Proveedor:  </label>
         <div>
-            <InputNumber width="10" @bind-Value="Presupuesto.ProjectConstrId" />
-            <ValidationMessage For="@(()=>Presupuesto.ProjectConstrId)" />
+            <InputText width="10" @bind-Value="Materiales.Proveedor" />
+            <ValidationMessage For="@(()=>Materiales.Proveedor)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha de Entrega Estimada:  </label>
+        <div>
+            <InputDate @bind-Value="Materiales.FechaE" />
+            <ValidationMessage For="@(()=>Materiales.FechaE)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>Proyecto:  </label>
+        <div>
+            <InputNumber @bind-Value="Materiales.ProjectConstrId" />
+            <ValidationMessage For="@(()=>Materiales.ProjectConstrId)" />
         </div>
     </div>
 
     <button class="btn btn-primary" type="submit">Guardar</button>
+
     <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+
     <button class="btn btn-info" type="reset"><i class="bi bi-x-circle" />Limpiar</button>
 </EditForm>
-
-
-
-
-
 
 @code {
     private EditContext editContext = null!;
 
     protected override void OnInitialized()
     {
-        editContext = new EditContext(Presupuesto);
+        editContext = new EditContext(Materiales);
     }
 
-    [EditorRequired]
     [Parameter]
-    public Presupuesto Presupuesto { get; set; }
+    public Materiales Materiales { get; set; }
 
-    [EditorRequired]
     [Parameter]
     public EventCallback OnSubmit { get; set; }
 
-    [EditorRequired]
     [Parameter]
     public EventCallback ReturnAction { get; set; }
 
@@ -89,7 +78,12 @@
     {
         var formularioFueEditado = editContext.IsModified();
 
-        if (!formularioFueEditado || FormularioPosteadoConExito)
+        if (!formularioFueEditado)
+        {
+            return;
+        }
+
+        if (FormularioPosteadoConExito)
         {
             return;
         }
