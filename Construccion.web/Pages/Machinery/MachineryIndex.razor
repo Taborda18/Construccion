@@ -1,4 +1,4 @@
-﻿@page "/machinery"
+﻿@page "/Machinerys"
 @using Construccion.WEB.Repositories
 @using construccion.Shared.Entities
 
@@ -13,7 +13,7 @@
 
 
 
-    <a class=" btn btn-primary" href="/machinery/create"></a>
+    <a class=" btn btn-primary" href="/Machinery/create"> NEW MACHINERS </a>
 
 </div>
 
@@ -32,6 +32,10 @@
                 @foreach (var machinery in machinerys!)
                 {
                     <tr>
+                        <td>
+                            @machinery.name
+
+                        </td>
                         <td>
                             @machinery.CantReque
 
@@ -65,7 +69,7 @@
     protected async override Task OnInitializedAsync()
     {
 
-        var responseHttp = await Repository.GetAsync<List<machinery>>("/api/machinery");
+        var responseHttp = await Repository.GetAsync<List<machinery>>("/api/Machinerys");
 
         machinerys = responseHttp.Response!;
 

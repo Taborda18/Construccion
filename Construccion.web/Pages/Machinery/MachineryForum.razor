@@ -1,24 +1,83 @@
-﻿
+﻿@inject IRepository repository
 
-<EditForm Model= "machinery" OnInvalidSubmit= "OnSubmit">
+
+<EditForm Model= "Machinery" OnSubmit= "OnSubmit">
 
 
     <DataAnnotationsValidator/>
 
     <div class ="mb-3">
 
-        <label>machinerys</label>
+        <label>Nombre</label>
 
         <div >
 
-            <InputText class="form-control " @bind-Value="machinery."></InputText>
+            <InputText class="form-control" @bind-Value="Machinery.name"></InputText>
+            <ValidationMessage For="@(() => Machinery.name)" />
 
-           
-            
+        </div>
+        
+    </div>
+
+    <div class="mb-3">
+
+        <label>Cantidad Requerida</label>
+
+        <div>
+
+            <InputText class="form-control" @bind-Value="Machinery.CantReque"></InputText>
+            <ValidationMessage For="@(() => Machinery.CantReque)" />
 
         </div>
 
     </div>
+
+    <div class="mb-3">
+
+        <label>Proveedor</label>
+
+        <div>
+
+            <InputText class="form-control" @bind-Value="Machinery.Proveed"></InputText>
+            <ValidationMessage For="@(() => Machinery.Proveed)" />
+
+        </div>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Fecha de entrega</label>
+
+        <div>
+
+            <InputDate class="form-control" @bind-Value="Machinery.FechaEntrga"></InputDate>
+            <ValidationMessage For="@(() => Machinery.FechaEntrga)" />
+
+        </div>
+
+    </div>
+
+
+    <div class="mb-3">
+
+        <label>Proyecto de construccion</label>
+
+        <div>
+
+            <InputNumber class="form-control" @bind-Value="Machinery.ProjectConstrId"></InputNumber>
+            <ValidationMessage For="@(() => Machinery.ProjectConstrId)" />
+
+        </div>
+
+    </div>
+
+    <button class="btn  btn-primary" type="submit">GUARDAR </button>
+
+    <button class="btn btn-success" onclick="ReturnAction">REGRESAR </button> 
+
+    <button class="btn btn-info" onclick="Reset">RESET </button>
+
 
 </EditForm> 
 
@@ -30,22 +89,23 @@
 
 @code {
 
-    
+    [EditorRequired]
     [Parameter]
 
     public machinery Machinery { get; set; }
 
-    
-    
+
+
+    [EditorRequired]
     [Parameter]
 
-    public EventCallback
+    public EventCallback OnSubmit { get; set; }
 
-    [EditorRequiered]
+
+    [EditorRequired]
     [Parameter]
 
-    public EventCallback
-
+    public EventCallback ReturnAction { get; set; }
 
 
 }

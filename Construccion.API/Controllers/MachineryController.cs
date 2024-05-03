@@ -10,7 +10,7 @@ namespace Construccion.API.Controllers
 
 
     [ApiController]
-    [Route("/api/machinery")]
+    [Route("/api/Machinerys")]
     public class MachineryController : ControllerBase
     {
 

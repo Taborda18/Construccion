@@ -1,0 +1,47 @@
+﻿
+@page "/Machinery/create"
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertServices
+
+<h3>Machinery Create</h3>
+
+
+
+<MachineryForum @ref="machineryforum" Machinery="Machinery" OnSubmit="Create" ReturnAction="Return">
+
+
+
+
+
+</MachineryForum>
+
+
+
+@code {
+    private machinery Machinery = new();
+    private MachineryForum machineryforum;
+
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/Machinerys", Machinery);
+
+        if (responseHttp.Error)
+        {
+
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertServices.FireAsync("Error","prueba", message);
+            return;
+        }
+        navigationManager.NavigateTo("/Machinerys");
+
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/Machinerys");
+
+    } 
+
+
+}

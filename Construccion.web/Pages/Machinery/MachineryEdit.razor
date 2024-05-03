@@ -1,0 +1,74 @@
+﻿@page "/Machinery/editar/{id:int}"
+@using System.Net
+@inject NavigationManager navigationManager
+@inject IRepository repository
+@inject SweetAlertService sweetAlertService
+
+<h3>Editar</h3>
+
+@if (machinery is null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+    <MachineryForum @ref="machineryforum" Machinery="machinery" OnSubmit="Editar" ReturnAction="Return" />
+
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    private machinery machinery;
+    private MachineryForum machineryforum;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var responseHttp = await repository.GetAsync<machinery>($"/api/machinerys/{id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("/machinery");
+            }
+            else
+            {
+                var messsage = await responseHttp.GetErrorMessage();
+                await sweetAlertService.FireAsync("Error", messsage, SweetAlertIcon.Error);
+            }
+        }
+        else
+        {
+            machinery = responseHttp.Response;
+        }
+    }
+
+
+    private async Task Editar()
+    {
+        var responseHttp = await repository.PutAsync("/api/Machinerys", machinery);
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertService.FireAsync("Error", message);
+            return;
+        }
+
+        Return();
+        var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Cambios guardados con éxito.");
+    }
+
+    private void Return()
+    {
+       // machineryforum!.FormularioPosteadoConExito = true;
+        navigationManager.NavigateTo("/Machinerys");
+    }
+
+}

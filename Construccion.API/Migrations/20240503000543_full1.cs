@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Construccion.API.Migrations
 {
     /// <inheritdoc />
-    public partial class jelou : Migration
+    public partial class full1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -170,6 +170,7 @@ namespace Construccion.API.Migrations
                 {
                     id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CantReque = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Proveed = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     FechaEntrga = table.Column<DateOnly>(type: "date", nullable: false),

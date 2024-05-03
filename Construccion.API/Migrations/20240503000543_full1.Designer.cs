@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Construccion.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240502141959_jelou")]
-    partial class jelou
+    [Migration("20240503000543_full1")]
+    partial class full1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -269,6 +269,11 @@ namespace Construccion.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Proveed")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("name")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
