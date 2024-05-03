@@ -15,6 +15,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 builder.Services.AddSweetAlert2();
 
 
+
+
 builder.Services.AddScoped<IRepository, Repository>();
 
 
