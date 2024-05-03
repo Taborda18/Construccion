@@ -1,0 +1,133 @@
+﻿@page "/ProjectConstrus"
+@using construccion.Shared.Entities
+@using Construccion.WEB.Repositories
+@using Construccion.WEB.Shared
+@inject SweetAlertService sweetAlertService
+@inject NavigationManager navigationManager
+@inject IRepository repository
+
+<h1>PROYECTO CONSTRUCCION</h1>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/ProjectConstrus/create">Nuevo Proyecto</a>
+</div>
+
+
+<GenericList MyList="ProjectConstrs">
+
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ProjectConstrs</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ProjectConstrs!)
+                {
+                    <tr>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            @item.Locate
+                        </td>
+                        <td>
+                            @item.FechaStart
+                        </td>
+                        <td>
+                            @item.FechaEnd
+                        </td>
+                        <td>
+                            <a href="/projectConstrus/editar/@item.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
+                            <button @onclick=@(() => DeleteAsycn(item)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+
+    </Body>
+
+</GenericList>
+
+
+
+
+
+@code {
+
+    public List<ProjectConstr> ProjectConstrs { get; set; }
+
+
+    protected async override Task OnInitializedAsync()
+    {
+
+
+        await LoadAsync();
+
+
+
+    }
+
+    private async Task LoadAsync()
+    {
+        var responseHttp = await repository.GetAsync<List<ProjectConstr>>("/api/ProjectConstrus");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        ProjectConstrs = responseHttp.Response;
+    }
+    private async Task DeleteAsycn(ProjectConstr projectConstrs)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {projectConstrs.Name}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+
+        {
+            return;
+        }
+
+        var responseHttp = await repository.DeleteAsync<ProjectConstr>($"/api/ProjectConstrus/{projectConstrs.id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("ProjectConstrus");
+            }
+            else
+            {
+                var mensajeError = await responseHttp.GetErrorMessage();
+                await sweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+    }
+
+
+}
+

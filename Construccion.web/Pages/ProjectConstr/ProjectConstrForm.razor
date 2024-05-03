@@ -1,0 +1,150 @@
+﻿@using construccion.Shared.Entities
+@using Construccion.WEB.Shared
+@using Construccion.WEB.Repositories
+@inject SweetAlertService sweetAlertService
+@inject IRepository repository
+
+
+
+
+<EditForm Model="projectConstrs" OnSubmit="OnSubmit">
+
+
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+
+        <label>Nombre:  </label>
+        <div>
+            <InputText width="10" @bind-Value="projectConstrs.Name" />
+            <ValidationMessage For="@(()=>projectConstrs.Name)" />
+
+        </div>
+    </div>
+
+    <div class="mb-3">
+
+        <label>Localizacion </label>
+        <div>
+            <InputText width="10" @bind-Value="projectConstrs.Locate" />
+            <ValidationMessage For="@(()=>projectConstrs.Locate)" />
+
+        </div>
+    </div>
+    <div class="mb-3">
+
+        <label>Descripcion </label>
+        <div>
+            <InputText width="10" @bind-Value="projectConstrs.Description" />
+            <ValidationMessage For="@(()=>projectConstrs.Description)" />
+
+        </div>
+    </div>
+
+    <div class="mb-3">
+
+        <label>Fecha inicio </label>
+        <div>
+            <InputDate width="10" @bind-Value="projectConstrs.FechaStart" />
+            <ValidationMessage For="@(()=>projectConstrs.FechaStart)" />
+
+        </div>
+    </div>
+
+
+    <div class="mb-3">
+
+        <label>Fecha fin </label>
+        <div>
+            <InputDate width="10" @bind-Value="projectConstrs.FechaEnd" />
+            <ValidationMessage For="@(()=>projectConstrs.FechaEnd)" />
+
+        </div>
+    </div>
+
+
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+    <button class="btn btn-success" onclick="ReturnAction">Regresar</button>
+
+    <button class="btn btn-info" type="reset"><i class="bi bi-x-circle" />Limpiar</button>
+
+
+
+
+
+
+
+</EditForm>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@code {
+
+    private EditContext editContext = null!;
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(projectConstrs);
+    }
+    [EditorRequired]
+    [Parameter]
+    public ProjectConstr projectConstrs { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+
+    public EventCallback OnSubmit { get; set; }
+
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+
+    public bool FormularioPosteadoConExito { get; set; } = false;
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formularioFueEditado = editContext.IsModified();
+
+        if (!formularioFueEditado)
+        {
+            return;
+        }
+
+        if (FormularioPosteadoConExito)
+        {
+            return;
+        }
+
+        var resultado = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Deseas abandonar la página y perder los cambios?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true
+            });
+
+        var confirmado = !string.IsNullOrEmpty(resultado.Value);
+
+        if (confirmado)
+        {
+            return;
+        }
+
+        context.PreventNavigation();
+    }
+}
+
+
