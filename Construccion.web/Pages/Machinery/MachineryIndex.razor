@@ -32,25 +32,25 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var machinery in machinerys!)
+                @foreach (var item in machinerys!)
                 {
                     <tr>
                         <td>
-                            @machinery.name
+                            @item.name
 
                         </td>
                         <td>
-                            @machinery.CantReque
+                            @item.CantReque
 
                         </td>
                         <td>
-                            @machinery.Proveed
+                            @item.Proveed
                         </td>
                         <td>
-                            @machinery.FechaEntrga
+                            @item.FechaEntrga
                         </td>
-                        <a href="/Machinery/editar/@machinery.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
-                        <button @onclick=@(() => DeleteAsycn(machinery)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>
+                        <a href="/Machinery/editar/@item.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
+                        <button @onclick=@(() => DeleteAsycn(item)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>
 
                     </tr>
                 }

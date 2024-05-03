@@ -10,7 +10,7 @@ namespace Construccion.API.Controllers
 
 
     [ApiController]
-    [Route("/api/tarea")]
+    [Route("/api/tareas")]
     public class TareaController: ControllerBase
     {
 

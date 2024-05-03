@@ -75,6 +75,19 @@
 
     </div>
 
+    <div class="mb-3">
+
+        <label>TAREA ASOCIADA</label>
+
+        <div>
+
+            <InputNumber class="form-control" @bind-Value="Machinery.ProjectTareas"></InputNumber>
+            <ValidationMessage For="@(() => Machinery.ProjectTareas)" />
+
+        </div>
+
+    </div>
+
     <button class="btn  btn-primary" type="submit">GUARDAR </button>
 
     <button class="btn btn-success" onclick="ReturnAction">REGRESAR </button> 
