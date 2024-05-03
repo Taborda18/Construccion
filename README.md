@@ -1,3 +1,5 @@
 # Construccion
 
-volveremos con mas FATAL ERROR
+volvimos con mas FATAL ERROR QUE NUNCA
+
+ROBIN^2
