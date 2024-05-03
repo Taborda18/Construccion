@@ -1,11 +1,14 @@
 ﻿@page "/EquiConss"
-
-
-@inject IRepository Repository
+@using construccion.Shared.Entities
+@using Construccion.WEB.Repositories
+@using Construccion.WEB.Shared
+@inject SweetAlertService sweetAlertService
+@inject NavigationManager navigationManager
+@inject IRepository repository
 
 <h1>Equipo de construccion</h1>
 <div class="mb-3">
-    <a class="btn btn-primary" href="/EquiConss/create">New Equi</a>
+   <a class="btn btn-primary" href="/EquiConss/create">Nuevo Equipo</a>
 </div>
 
 
@@ -21,24 +24,26 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var EquiCons in EquiConss!)
-                {
-                    <tr>
+                @foreach (var item in EquiConss!)
+                 {
+                     <tr>
                         <td>
-                            @EquiCons.Nombre
+                            @item.Nombre
                         </td>
                         <td>
-                            @EquiCons.Especialidades
+                            @item.Especialidades
                         </td>
                         <td>
-                            @EquiCons.Lista_Miembros
+                            @item.Lista_Miembros
                         </td>
-                            <a class="btn btn-warning">Editar</a>
-                            <button class="btn btn-danger">Borrar</button>
-                        
+                           <td>
+                            <a href="/EquiConss/editar/@item.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
+                            <button @onclick=@(() => DeleteAsycn(item)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>
+                         </td>
                     </tr>
-                }
+                  }
             </tbody>
+            
         </table>
 
     </Body>
@@ -51,19 +56,71 @@
 
 @code {
     
-    public List<EquiCons>? EquiConss { get; set; }
+    public List<EquiCons> EquiConss { get; set; }
+
+
     protected async override Task OnInitializedAsync()
     {
-     var responseHttp= await Repository.GetAsync<List<EquiCons>>("/api/EquiConss");    
+     
 
-        EquiConss = responseHttp.Response!;
+        await LoadAsync();
 
    
     
     }
 
+    private async Task LoadAsync()
+    {
+        var responseHttp = await repository.GetAsync<List<EquiCons>>("/api/EquiConss");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        EquiConss= responseHttp.Response;
+    }
+    private async Task DeleteAsycn(EquiCons equicons)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {equicons.Nombre}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+        
+        {
+            return;
+        }
 
+        var responseHttp = await repository.DeleteAsync<EquiCons>($"/api/EquiConss/{equicons.id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("EquiConss");
+            }
+            else
+            {
+                var mensajeError = await responseHttp.GetErrorMessage();
+                await sweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
 
+        await LoadAsync();
+        var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+    }
 
 
 }

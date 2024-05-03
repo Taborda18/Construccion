@@ -1,0 +1,127 @@
+﻿@using construccion.Shared.Entities
+@using Construccion.WEB.Shared
+@using Construccion.WEB.Repositories
+@inject SweetAlertService sweetAlertService
+@inject IRepository repository
+
+
+
+
+<EditForm Model="EquiCons" OnSubmit="OnSubmit">
+
+
+    <DataAnnotationsValidator/>
+
+  <div class="mb-3">
+
+     <label>Nombre:  </label>
+     <div>
+            <InputText width="10" @bind-Value="EquiCons.Nombre"/>
+                <ValidationMessage For="@(()=>EquiCons.Nombre)"/>
+
+     </div>
+  </div>
+
+    <div class="mb-3">
+
+        <label>Especialidades </label>
+        <div>
+            <InputText width="10" @bind-Value="EquiCons.Especialidades" />
+            <ValidationMessage For="@(()=>EquiCons.Especialidades)" />
+
+        </div>
+    </div>
+    <div class="mb-3">
+
+        <label>Lista de miembros </label>
+        <div>
+            <InputText width="10" @bind-Value="EquiCons.Lista_Miembros" />
+            <ValidationMessage For="@(()=>EquiCons.Lista_Miembros)" />
+
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    
+    <button class="btn btn-success" onclick="ReturnAction">Regresar</button> 
+    
+    <button class="btn btn-info" type="reset"><i class="bi bi-x-circle" />Limpiar</button>
+
+
+
+
+
+
+
+</EditForm>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@code {
+
+    private EditContext editContext = null!;
+    protected override void OnInitialized()
+    {
+        editContext = new(EquiCons);
+    }
+    [EditorRequired]
+    [Parameter]
+    public EquiCons EquiCons { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+
+    public EventCallback OnSubmit { get; set; }
+    
+    
+    [EditorRequired]
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+
+    public bool FormularioPosteadoConExito { get; set; } = false;
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formularioFueEditado = editContext.IsModified();
+
+        if (!formularioFueEditado)
+        {
+            return;
+        }
+
+        if (FormularioPosteadoConExito)
+        {
+            return;
+        }
+
+        var resultado = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Deseas abandonar la página y perder los cambios?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true
+            });
+
+        var confirmado = !string.IsNullOrEmpty(resultado.Value);
+
+        if (confirmado)
+        {
+            return;
+        }
+
+        context.PreventNavigation();
+    }
+}
+
+

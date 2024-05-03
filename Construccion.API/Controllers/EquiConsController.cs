@@ -8,15 +8,15 @@ namespace Construccion.API.Controllers
 {
     [ApiController]
     [Route("/api/EquiConss")]
-    public class EquiConsController:ControllerBase
+    public class EquiConsController : ControllerBase
     {
         private readonly DataContext _context;
 
         public EquiConsController(DataContext context)
         {
-            _context = context; 
+            _context = context;
         }
-        
+
         //Metodo get
         [HttpGet]
         public async Task<ActionResult> Get()
@@ -27,7 +27,7 @@ namespace Construccion.API.Controllers
         }
 
         // Método Get- por Id
-        [HttpGet("id:int")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult> Get(int id)
         {
 
@@ -83,7 +83,7 @@ namespace Construccion.API.Controllers
 
 
         //Médoro eliminar registro
-        [HttpDelete("id:int")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
 
