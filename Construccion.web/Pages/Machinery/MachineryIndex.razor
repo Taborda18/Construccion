@@ -1,0 +1,138 @@
+﻿@page "/Machinerys"
+@using Construccion.WEB.Repositories
+@using construccion.Shared.Entities
+@inject IRepository repository
+@inject SweetAlertService sweetAlertService
+@inject NavigationManager navigationManager
+
+
+
+<h3>Maquinaria</h3>
+
+
+@inject IRepository Repository
+
+<div class="m-3 ">
+
+
+
+    <a class=" btn btn-primary" href="/Machinery/create"> NEW MACHINERS </a>
+
+</div>
+
+<GenericList MyList="machinerys">
+
+    <Body>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>machinery</th>
+                    <th></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var machinery in machinerys!)
+                {
+                    <tr>
+                        <td>
+                            @machinery.name
+
+                        </td>
+                        <td>
+                            @machinery.CantReque
+
+                        </td>
+                        <td>
+                            @machinery.Proveed
+                        </td>
+                        <td>
+                            @machinery.FechaEntrga
+                        </td>
+                        <a class="btn btn-warning">Editar</a>
+                        <button class="btn btn-danger">Borrar</button>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </Body>
+
+</GenericList>
+
+
+
+
+
+@code {
+
+    public List<machinery>? machinerys { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+
+        var responseHttp = await Repository.GetAsync<List<machinery>>("/api/Machinerys");
+
+        machinerys = responseHttp.Response!;
+
+
+
+    }
+
+
+
+    private async Task LoadAsync()
+    {
+        var responseHttp = await repository.GetAsync<List<EquiCons>>("/api/EquiConss");
+        if (responseHttp.Error)
+        {
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+            return;
+        }
+        EquiConss = responseHttp.Response;
+    }
+    private async Task DeleteAsycn(EquiCons equicons)
+    {
+        var result = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {equicons.Nombre}?",
+                Icon = SweetAlertIcon.Question,
+                ShowCancelButton = true,
+            });
+        var confirm = string.IsNullOrEmpty(result.Value);
+        if (confirm)
+
+        {
+            return;
+        }
+
+        var responseHttp = await repository.DeleteAsync<EquiCons>($"/api/EquiConss/{equicons.id}");
+        if (responseHttp.Error)
+        {
+            if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigationManager.NavigateTo("EquiConss");
+            }
+            else
+            {
+                var mensajeError = await responseHttp.GetErrorMessage();
+                await sweetAlertService.FireAsync("Error", mensajeError, SweetAlertIcon.Error);
+            }
+            return;
+        }
+
+        await LoadAsync();
+        var toast = sweetAlertService.Mixin(new SweetAlertOptions
+            {
+                Toast = true,
+                Position = SweetAlertPosition.BottomEnd,
+                ShowConfirmButton = true,
+                Timer = 3000
+            });
+        await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
+    }
+
+}
