@@ -49,8 +49,8 @@
                         <td>
                             @machinery.FechaEntrga
                         </td>
-                        <a class="btn btn-warning">Editar</a>
-                        <button class="btn btn-danger">Borrar</button>
+                        <a href="/Machinery/editar/@machinery.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
+                        <button @onclick=@(() => DeleteAsycn(machinery)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>
 
                     </tr>
                 }
@@ -67,7 +67,7 @@
 
 @code {
 
-    public List<machinery>? machinerys { get; set; }
+    public List<machinery> machinerys { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
@@ -84,21 +84,21 @@
 
     private async Task LoadAsync()
     {
-        var responseHttp = await repository.GetAsync<List<EquiCons>>("/api/EquiConss");
+        var responseHttp = await repository.GetAsync<List<machinery>>("/api/Machinerys");
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessage();
             await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
-       // EquiConss = responseHttp.Response;
+        machinerys = responseHttp.Response;
     }
-    private async Task DeleteAsycn(EquiCons equicons)
+    private async Task DeleteAsycn(machinery machinerys)
     {
         var result = await sweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {equicons.Nombre}?",
+                Text = $"¿Estas seguro de querer borrar la maquinaria : {machinerys.name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -109,12 +109,12 @@
             return;
         }
 
-        var responseHttp = await repository.DeleteAsync<EquiCons>($"/api/EquiConss/{equicons.id}");
+        var responseHttp = await repository.DeleteAsync<machinery>($"/api/Machinerys/{machinerys.id}");
         if (responseHttp.Error)
         {
             if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("EquiConss");
+                navigationManager.NavigateTo("Machinerys");
             }
             else
             {
