@@ -4,7 +4,7 @@
 @inject SweetAlertService sweetAlertService
 @inject IRepository repository
 
-<EditForm Model="Machinery" OnSubmit="OnSubmit">
+<EditForm Model="projectconsts" OnSubmit="OnSubmit">
 
     <DataAnnotationsValidator />
 
@@ -14,58 +14,50 @@
     <div class="mb-3">
         <label>Nombre:  </label>
         <div>
-            <InputText width="10" @bind-Value="Machinery.name" />
-            <ValidationMessage For="@(()=>Machinery.name)" />
+            <InputText width="10" @bind-Value="projectconsts.Name" />
+            <ValidationMessage For="@(()=>projectconsts.Name)" />
         </div>
 
     </div>
 
 
     <div class="mb-3">
-        <label>Proovedor:  </label>
+        <label>Localizacion:  </label>
         <div>
-            <InputText width="10" @bind-Value="Machinery.Proveed" />
-            <ValidationMessage For="@(()=>Machinery.Proveed)" />
+            <InputText width="10" @bind-Value="projectconsts.Locate" />
+            <ValidationMessage For="@(()=>projectconsts.Locate)" />
         </div>
 
-    </div>
-
-
-        <label>Cantidad Requerida:  </label>
-        <div>
-            <InputText width="10" @bind-Value="Machinery.CantReque" />
-        <ValidationMessage For="@(()=>Machinery.CantReque)" />
-        </div>
-        <div>    
-
-
-        </div>
-
-    <div class="mb-3">
-        <label>Fecha Entrega:  </label>
-        <div>
-            <InputDate width="10" @bind-Value="Machinery.FechaEntrga" />
-            <ValidationMessage For="@(()=>Machinery.FechaEntrga)" />
-        </div>
-    </div>
-
-
-
-    <div class="mb-3">
-        <label>Proyecto:  </label>
-        <div>
-            <InputNumber @bind-Value="Machinery.ProjectConstrId" />
-            <ValidationMessage For="@(()=>Machinery.ProjectConstrId)" />
-        </div>
     </div>
 
     <div class="mb-3">
-        <label>TAREA:  </label>
+        <label>Descripcion:  </label>
         <div>
-            <InputNumber @bind-Value="Machinery.ProjectTareas" />
-            <ValidationMessage For="@(()=>Machinery.ProjectTareas)" />
+            <InputText width="10" @bind-Value="projectconsts.Description" />
+            <ValidationMessage For="@(()=>projectconsts.Description)" />
         </div>
+
     </div>
+
+    <div class="mb-3">
+        <label>Fecha Inicio:  </label>
+        <div>
+            <InputDate width="10" @bind-Value="projectconsts.FechaStart" />
+            <ValidationMessage For="@(()=>projectconsts.FechaStart)" />
+        </div>
+
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha fin:  </label>
+        <div>
+            <InputDate width="10" @bind-Value="projectconsts.FechaEnd" />
+            <ValidationMessage For="@(()=>projectconsts.FechaEnd)" />
+        </div>
+
+    </div>
+
+
 
 
     <button class="btn btn-primary" type="submit">Guardar</button>
@@ -80,11 +72,11 @@
 
     protected override void OnInitialized()
     {
-        editContext = new EditContext(Machinery);
+        editContext = new EditContext(projectconsts);
     }
 
     [Parameter]
-    public machinery Machinery {get; set; }
+    public ProjectConstr projectconsts { get; set; }
 
     [Parameter]
     public EventCallback OnSubmit { get; set; }

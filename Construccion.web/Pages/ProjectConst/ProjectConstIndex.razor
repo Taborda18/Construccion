@@ -1,17 +1,17 @@
-﻿@page "/Machinerys"
+﻿@page "/ProjectConsts"
 @using construccion.Shared.Entities
 @using Construccion.WEB.Repositories
 @using Construccion.WEB.Shared
 @inject SweetAlertService sweetAlertService
 @inject NavigationManager navigationManager
 @inject IRepository repository
-<h1>MAQUINARIA</h1>
+<h1>PROYECTO</h1>
 <div class="mb-3">
-    <a class="btn btn-primary" href="/Machinery/create">ASIGNAR MAQUINARIA</a>
+    <a class="btn btn-primary" href="/ProjectConsts/create">PROYECTO DE CONSTRUCCION</a>
 </div>
 
 
-<GenericList MyList="Machineries">
+<GenericList MyList="ProjectConsts">
 
     <Body>
         <table class="table table-striped">
@@ -23,24 +23,27 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Machineries!)
+                @foreach (var item in ProjectConsts!)
                 {
                     <tr>
                         <td>
-                            @item.name
+                            @item.Name
                         </td>
                         <td>
-                            @item.Proveed
+                            @item.Locate
                         </td>
                         <td>
-                            @item.CantReque
+                            @item.Description
                         </td>
                         <td>
-                            @item.FechaEntrga
+                            @item.FechaStart
                         </td>
-                        
                         <td>
-                            <a href="/Machinerys/editar/@item.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
+                            @item.FechaEnd
+                        </td>
+
+                        <td>
+                            <a href="/ProjectConsts/editar/@item.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
                             <button @onclick=@(() => DeleteAsycn(item)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>
                         </td>
                     </tr>
@@ -54,7 +57,7 @@
 </GenericList>
 
 @code {
-    public List<machinery> Machineries { get; set; }
+    public List<ProjectConstr> ProjectConsts { get; set; }
 
 
     protected async override Task OnInitializedAsync()
@@ -69,21 +72,21 @@
 
     private async Task LoadAsync()
     {
-        var responseHttp = await repository.GetAsync<List<machinery>>("/api/Machinerys");
+        var responseHttp = await repository.GetAsync<List<ProjectConstr>>("/api/ProjectConsts");
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessage();
             await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
-        Machineries = responseHttp.Response;
+        ProjectConsts = responseHttp.Response;
     }
-    private async Task DeleteAsycn(machinery machinery)
+    private async Task DeleteAsycn(ProjectConstr ProjectConsts)
     {
         var result = await sweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {machinery.name}?",
+                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {ProjectConsts.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -94,12 +97,12 @@
             return;
         }
 
-        var responseHttp = await repository.DeleteAsync<Materiales>($"/api/Machinerys/{machinery.id}");
+        var responseHttp = await repository.DeleteAsync<Materiales>($"/api/ProjectConsts/{ProjectConsts.id}");
         if (responseHttp.Error)
         {
             if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("/Machinerys");
+                navigationManager.NavigateTo("/ProjectConsts");
             }
             else
             {
