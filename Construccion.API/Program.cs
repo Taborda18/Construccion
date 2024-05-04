@@ -1,5 +1,9 @@
 using Construccion.API.Data;
+using Construccion.API.Helpers;
+using Construccion.Shared.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,24 +17,59 @@ builder.Services.AddDbContext<DataContext>(x=>x.UseSqlServer("name=DefaultConnec
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+SeedData(app);
+
+static void SeedData(WebApplication app)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
 
-app.UseHttpsRedirection();
+    using (var scope = scopedFactory!.CreateScope())
+    {
+        var service = scope.ServiceProvider.GetService<SeedDb>();
+        //service!.SeedAsync().Wait();
+    }
 
-app.UseAuthorization();
 
-app.MapControllers();
 
-app.UseCors(x => x
+
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+
+
+
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthentication();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+
+    app.UseCors(x => x
+
+    .AllowAnyMethod()
     .AllowAnyHeader()
-    .AllowAnyMethod() 
+    .AllowCredentials()
     .SetIsOriginAllowed(origin => true)
-    .AllowCredentials());
+
+    );
 
 
-app.Run();
+
+
+
+
+
+
+
+    app.Run();
+
+}

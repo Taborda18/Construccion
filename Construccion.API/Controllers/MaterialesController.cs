@@ -26,7 +26,7 @@ namespace Construccion.API.Controllers
         }
 
         // Método Get- por Id
-        [HttpGet("id:int")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult> Get(int id)
         {
 
@@ -82,7 +82,7 @@ namespace Construccion.API.Controllers
 
 
         //Médoro eliminar registro
-        [HttpDelete("id:int")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
 
