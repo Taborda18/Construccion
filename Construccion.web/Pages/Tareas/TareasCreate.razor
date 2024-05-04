@@ -1,0 +1,46 @@
+﻿
+@page "/Tareas/create"
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertServices
+
+<h3>Tareas Create</h3>
+
+
+
+<TareasForm tareass="tareas" OnSubmit="Create" ReturnAction="Return" >
+
+
+
+
+
+</TareasForm>
+
+
+
+@code {
+    private Tarea tareas = new();
+   
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/Tareas", tareas);
+
+        if (responseHttp.Error)
+        {
+
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertServices.FireAsync("Error","prueba", message);
+            return;
+        }
+        navigationManager.NavigateTo("/Tareas");
+
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/Tareas");
+
+    } 
+
+
+}

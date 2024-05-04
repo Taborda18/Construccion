@@ -1,4 +1,5 @@
-﻿@page "/ProjectConsts/editar/{id:int}"
+﻿
+@page "/Tareas/editar/{id:int}"
 @using System.Net
 @inject NavigationManager navigationManager
 @inject IRepository repository
@@ -6,29 +7,29 @@
 
 <h3>Editar</h3>
 
-@if (projectconsts is null)
+@if (Tareas is null)
 {
     <p>Cargando...</p>
 }
 else
 {
-    <ProjectConstForm Projectconsts="projectconsts" OnSubmit="Editar" ReturnAction="Return" />
+    <TareasForm tareass="Tareas" OnSubmit="Editar" ReturnAction="Return" />
 }
 
 @code {
     [Parameter]
     public int id { get; set; }
-    private ProjectConstr projectconsts;
-    
+    private Tarea Tareas;
+   
 
     protected override async Task OnParametersSetAsync()
     {
-        var responseHttp = await repository.GetAsync<ProjectConstr>($"/api/ProjectConsts/{id}");
+        var responseHttp = await repository.GetAsync<Tarea>($"/api/Tareas/{id}");
         if (responseHttp.Error)
         {
             if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("/ProjectConsts");
+                navigationManager.NavigateTo("/Tareas");
             }
             else
             {
@@ -38,13 +39,13 @@ else
         }
         else
         {
-            projectconsts = responseHttp.Response;
+            Tareas = responseHttp.Response;
         }
     }
 
     private async Task Editar()
     {
-        var responseHttp = await repository.PutAsync("/api/ProjectConsts", projectconsts);
+        var responseHttp = await repository.PutAsync("/api/Tareas", Tareas);
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessage();
@@ -66,6 +67,6 @@ else
     private void Return()
     {
        
-        navigationManager.NavigateTo("/ProjectConsts");
+        navigationManager.NavigateTo("/Machinerys");
     }
 }

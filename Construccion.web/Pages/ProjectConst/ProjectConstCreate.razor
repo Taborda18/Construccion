@@ -1,0 +1,45 @@
+﻿@page "/ProjectConsts/create"
+@inject IRepository repository
+@inject NavigationManager navigationManager
+@inject SweetAlertService sweetAlertServices
+
+<h3>Machinery Create</h3>
+
+
+
+
+<ProjectConstForm Projectconsts="projectconsts" OnSubmit="Create" ReturnAction="Return">
+
+
+
+
+</ProjectConstForm>
+
+
+
+@code {
+    private ProjectConstr projectconsts = new();
+   
+    private async Task Create()
+    {
+        var responseHttp = await repository.PostAsync("/api/ProjectConsts", projectconsts);
+
+        if (responseHttp.Error)
+        {
+
+            var message = await responseHttp.GetErrorMessage();
+            await sweetAlertServices.FireAsync("Error","prueba", message);
+            return;
+        }
+        navigationManager.NavigateTo("/ProjectConsts");
+
+    }
+
+    private void Return()
+    {
+        navigationManager.NavigateTo("/Machinerys");
+
+    } 
+
+
+}
