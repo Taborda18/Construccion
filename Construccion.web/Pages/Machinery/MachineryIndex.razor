@@ -17,7 +17,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Materiales</th>
+                    <th>MAQUINARIA</th>
                     <th></th>
 
                 </tr>
@@ -27,17 +27,26 @@
                 {
                     <tr>
                         <td>
+                        <th>ID</th>
+                            @item.id
+                        </td>
+                        <td>
+                        <th>NOMBRE</th>
                             @item.name
                         </td>
                         <td>
+                        <th>PROOVEDOR</th>
                             @item.Proveed
                         </td>
                         <td>
+                        <th>CANTIDAD REQUERIDA</th>
                             @item.CantReque
                         </td>
                         <td>
+                        <th>FECHA ENTREGA</th>
                             @item.FechaEntrga
                         </td>
+                                             
                         
                         <td>
                             <a href="/Machinerys/editar/@item.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>

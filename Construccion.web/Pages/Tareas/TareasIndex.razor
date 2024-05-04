@@ -7,7 +7,7 @@
 @inject IRepository repository
 <h1>TAREAS</h1>
 <div class="mb-3">
-    <a class="btn btn-primary" href="/Tareas/create">TAREAS </a>
+    <a class="btn btn-primary" href="/Tareas/create">CREAR TAREAS </a>
 </div>
 
 
@@ -27,18 +27,23 @@
                 {
                     <tr>
                         <td>
+                        <th>ID</th>
                             @item.Id
                         </td>
                         <td>
+                        <th>NOMBRE</th>
                             @item.Name
                         </td>
                         <td>
+                        <th>DESCRIPCION</th>
                             @item.Description
                         </td>
                         <td>
+                        <th>FECHA INICIO</th>
                             @item.FechaStart
                         </td>
                         <td>
+                        <th>FECHA FIN</th>
                             @item.FechaEnd
                         </td>
 

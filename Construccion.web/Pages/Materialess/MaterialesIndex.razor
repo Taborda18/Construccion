@@ -28,20 +28,22 @@
                 {
                     <tr>
                         <td>
+                        <th>NOMBRE</th>
                             @item.Nombre
                         </td>
                         <td>
+                        <th>CANTIDAD</th>
                             @item.Cantidad
                         </td>
                         <td>
+                        <th>PROVEEDOR</th>
                             @item.Proveedor
                         </td>
                         <td>
+                        <th>FECHA ENTREGA</th>
                             @item.FechaE
                         </td>
-                        <td>
-                            @item.ProjectConstrId
-                        </td>
+                        
                         <td>
                             <a href="/Materialess/editar/@item.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
                             <button @onclick=@(() => DeleteAsycn(item)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>

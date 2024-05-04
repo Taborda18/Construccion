@@ -12,7 +12,7 @@
 
 
     <div class="mb-3">
-        <label>Nombre:  </label>
+        <label>NOMBRE:  </label>
         <div>
             <InputText width="10" @bind-Value="tareass.Name" />
             <ValidationMessage For="@(()=>tareass.Name)" />
@@ -22,7 +22,7 @@
 
 
     <div class="mb-3">
-        <label>Proovedor:  </label>
+        <label>DESCRIPCION:  </label>
         <div>
             <InputText width="10" @bind-Value="tareass.Description" />
             <ValidationMessage For="@(()=>tareass.Description)" />
@@ -31,7 +31,7 @@
     </div>
 
 
-    <label>Cantidad Requerida:  </label>
+    <label>FECHA INICIO:  </label>
     <div>
         <InputDate width="10" @bind-Value="tareass.FechaStart" />
         <ValidationMessage For="@(()=>tareass.FechaStart)" />
@@ -40,13 +40,28 @@
     </div>
 
     <div class="mb-3">
-        <label>Fecha Entrega:  </label>
+        <label>FECHA FIN:  </label>
         <div>
             <InputDate width="10" @bind-Value="tareass.FechaEnd" />
             <ValidationMessage For="@(()=>tareass.FechaEnd)" />
         </div>
     </div>
 
+    <div class="mb-3">
+        <label>FECHA FIN:  </label>
+        <div>
+            <InputDate width="10" @bind-Value="tareass.FechaEnd" />
+            <ValidationMessage For="@(()=>tareass.FechaEnd)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>ID PROYECTO ASIGNADO:  </label>
+        <div>
+            <InputNumber width="10" @bind-Value="tareass.ProjectConstrs" />
+            <ValidationMessage For="@(()=>tareass.ProjectConstrs)" />
+        </div>
+    </div>
 
 
 

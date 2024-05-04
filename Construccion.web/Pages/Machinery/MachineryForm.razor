@@ -12,7 +12,7 @@
 
 
     <div class="mb-3">
-        <label>Nombre:  </label>
+        <label>NOMBRE:  </label>
         <div>
             <InputText width="10" @bind-Value="Machinery.name" />
             <ValidationMessage For="@(()=>Machinery.name)" />
@@ -22,7 +22,7 @@
 
 
     <div class="mb-3">
-        <label>Proovedor:  </label>
+        <label>PROOVEDOR:  </label>
         <div>
             <InputText width="10" @bind-Value="Machinery.Proveed" />
             <ValidationMessage For="@(()=>Machinery.Proveed)" />
@@ -31,7 +31,7 @@
     </div>
 
 
-        <label>Cantidad Requerida:  </label>
+        <label>CANTIDAD REQUERIDA:  </label>
         <div>
             <InputText width="10" @bind-Value="Machinery.CantReque" />
         <ValidationMessage For="@(()=>Machinery.CantReque)" />
@@ -42,7 +42,7 @@
         </div>
 
     <div class="mb-3">
-        <label>Fecha Entrega:  </label>
+        <label>FECHA ENTREGA :  </label>
         <div>
             <InputDate width="10" @bind-Value="Machinery.FechaEntrga" />
             <ValidationMessage For="@(()=>Machinery.FechaEntrga)" />
@@ -52,7 +52,7 @@
 
 
     <div class="mb-3">
-        <label>Proyecto:  </label>
+        <label>PROYECTO ASIGNADO:  </label>
         <div>
             <InputNumber @bind-Value="Machinery.ProjectConstrId" />
             <ValidationMessage For="@(()=>Machinery.ProjectConstrId)" />
@@ -60,7 +60,7 @@
     </div>
 
     <div class="mb-3">
-        <label>TAREA:  </label>
+        <label>TAREA ASIGNADA:  </label>
         <div>
             <InputNumber @bind-Value="Machinery.ProjectTareas" />
             <ValidationMessage For="@(()=>Machinery.ProjectTareas)" />
