@@ -1,0 +1,116 @@
+﻿@using construccion.Shared.Entities
+@using Construccion.WEB.Shared
+@using Construccion.WEB.Repositories
+@inject SweetAlertService sweetAlertService
+@inject IRepository repository
+
+<EditForm Model="Machinery" OnSubmit="OnSubmit">
+
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>Nombre:  </label>
+        <div>
+            <InputText width="10" @bind-Value="Machinery.name" />
+            <ValidationMessage For="@(()=>Machinery.name)" />
+        </div>
+
+    </div>
+
+
+    <div class="mb-3">
+        <label>Nombre:  </label>
+        <div>
+            <InputText width="10" @bind-Value="Machinery.name" />
+            <ValidationMessage For="@(()=>Machinery.name)" />
+        </div>
+
+    </div>
+
+
+        <label>Cantidad Requerida:  </label>
+        <div>
+            <InputText width="10" @bind-Value="Machinery.CantReque" />
+        <ValidationMessage For="@(()=>Machinery.CantReque)" />
+        </div>
+        <div>    
+
+
+        </div>
+
+    <div class="mb-3">
+        <label>Fecha Entrega:  </label>
+        <div>
+            <InputDate width="10" @bind-Value="Machinery.FechaEntrga" />
+            <ValidationMessage For="@(()=>Machinery.FechaEntrga)" />
+        </div>
+    </div>
+
+
+
+    <div class="mb-3">
+        <label>Proyecto:  </label>
+        <div>
+            <InputNumber @bind-Value="Machinery.ProjectConstrId" />
+            <ValidationMessage For="@(()=>Machinery.ProjectConstrId)" />
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+    <button class="btn btn-success" @onclick="ReturnAction">Regresar</button>
+
+    <button class="btn btn-info" type="reset"><i class="bi bi-x-circle" />Limpiar</button>
+</EditForm>
+
+@code {
+    private EditContext editContext = null!;
+
+    protected override void OnInitialized()
+    {
+        editContext = new EditContext(Machinery);
+    }
+
+    [Parameter]
+    public machinery Machinery {get; set; }
+
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback ReturnAction { get; set; }
+
+    public bool FormularioPosteadoConExito { get; set; } = false;
+
+    private async Task OnBeforeInternalNavigation(LocationChangingContext context)
+    {
+        var formularioFueEditado = editContext.IsModified();
+
+        if (!formularioFueEditado)
+        {
+            return;
+        }
+
+        if (FormularioPosteadoConExito)
+        {
+            return;
+        }
+
+        var resultado = await sweetAlertService.FireAsync(new SweetAlertOptions
+            {
+                Title = "Confirmación",
+                Text = "¿Deseas abandonar la página y perder los cambios?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true
+            });
+
+        var confirmado = !string.IsNullOrEmpty(resultado.Value);
+
+        if (confirmado)
+        {
+            return;
+        }
+
+        context.PreventNavigation();
+    }
+}

@@ -1,104 +1,89 @@
 ﻿@page "/Machinerys"
-@using Construccion.WEB.Repositories
 @using construccion.Shared.Entities
-@inject IRepository repository
+@using Construccion.WEB.Repositories
+@using Construccion.WEB.Shared
 @inject SweetAlertService sweetAlertService
 @inject NavigationManager navigationManager
-
-
-
-<h3>Maquinaria</h3>
-
-
-@inject IRepository Repository
-
-<div class="m-3 ">
-
-
-
-    <a class=" btn btn-primary" href="/Machinery/create"> NEW MACHINERS </a>
-
+@inject IRepository repository
+<h1>MAQUINARIA</h1>
+<div class="mb-3">
+    <a class="btn btn-primary" href="/Machinerys/create">ASIGNAR MAQUINARIA</a>
 </div>
 
-<GenericList MyList="machinerys">
+
+<GenericList MyList="Machineries">
 
     <Body>
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>machinery</th>
+                    <th>Materiales</th>
                     <th></th>
 
                 </tr>
             </thead>
             <tbody>
-                @foreach (var machinery in machinerys!)
+                @foreach (var item in Machineries!)
                 {
                     <tr>
                         <td>
-                            @machinery.name
-
+                            @item.name
                         </td>
                         <td>
-                            @machinery.CantReque
-
+                            @item.Proveed
                         </td>
                         <td>
-                            @machinery.Proveed
+                            @item.CantReque
                         </td>
                         <td>
-                            @machinery.FechaEntrga
+                            @item.FechaEntrga
                         </td>
-                        <a class="btn btn-warning">Editar</a>
-                        <button class="btn btn-danger">Borrar</button>
-
+                        
+                        <td>
+                            <a href="/Machinerys/editar/@item.id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square" /> Editar</a>
+                            <button @onclick=@(() => DeleteAsycn(item)) class="btn btn-sm btn-danger"><i class="bi bi-trash-fill" /> Borrar</button>
+                        </td>
                     </tr>
                 }
             </tbody>
+
         </table>
 
     </Body>
 
 </GenericList>
 
-
-
-
-
 @code {
+    public List<machinery> Machineries { get; set; }
 
-    public List<machinery>? machinerys { get; set; }
 
     protected async override Task OnInitializedAsync()
     {
 
-        var responseHttp = await Repository.GetAsync<List<machinery>>("/api/Machinerys");
 
-        machinerys = responseHttp.Response!;
+        await LoadAsync();
 
 
 
     }
 
-
-
     private async Task LoadAsync()
     {
-        var responseHttp = await repository.GetAsync<List<EquiCons>>("/api/EquiConss");
+        var responseHttp = await repository.GetAsync<List<machinery>>("/api/Machinerys");
         if (responseHttp.Error)
         {
             var message = await responseHttp.GetErrorMessage();
             await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
             return;
         }
-       // EquiConss = responseHttp.Response;
+        Machineries = responseHttp.Response;
     }
-    private async Task DeleteAsycn(EquiCons equicons)
+    private async Task DeleteAsycn(machinery machinery)
     {
         var result = await sweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {equicons.Nombre}?",
+                Text = $"¿Estas seguro de querer borrar el equipo de construccion: {machinery.name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -109,12 +94,12 @@
             return;
         }
 
-        var responseHttp = await repository.DeleteAsync<EquiCons>($"/api/EquiConss/{equicons.id}");
+        var responseHttp = await repository.DeleteAsync<Materiales>($"/api/Machinerys/{machinery.id}");
         if (responseHttp.Error)
         {
             if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                navigationManager.NavigateTo("EquiConss");
+                navigationManager.NavigateTo("/Machinerys");
             }
             else
             {
@@ -135,4 +120,6 @@
         await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito.");
     }
 
+
 }
+

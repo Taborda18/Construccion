@@ -10,7 +10,7 @@ namespace Construccion.API.Controllers
 
 
     [ApiController]
-    [Route("/api/ProjectConstru")]
+    [Route("/api/ProjectConsts")]
     public class ProjectConstruControllers : ControllerBase
     {
 

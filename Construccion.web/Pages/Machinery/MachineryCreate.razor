@@ -8,20 +8,19 @@
 
 
 
-<MachineryForum @ref="machineryforum" Machinery="Machinery" OnSubmit="Create" ReturnAction="Return">
+<MachineryForm  Machinery="Machinery" OnSubmit="Create" ReturnAction="Return">
 
 
 
 
 
-</MachineryForum>
+</MachineryForm>
 
 
 
 @code {
     private machinery Machinery = new();
-    private MachineryForum machineryforum;
-
+   
     private async Task Create()
     {
         var responseHttp = await repository.PostAsync("/api/Machinerys", Machinery);
