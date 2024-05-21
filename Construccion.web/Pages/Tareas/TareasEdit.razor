@@ -1,5 +1,4 @@
-﻿
-@page "/Tareas/editar/{id:int}"
+﻿@page "/Tareas/editar/{id:int}"
 @using System.Net
 @inject NavigationManager navigationManager
 @inject IRepository repository
@@ -13,7 +12,7 @@
 }
 else
 {
-    <TareasForm tareass="Tareas" OnSubmit="Editar" ReturnAction="Return" />
+    <TareasForm tareas="Tareas" OnSubmit="Edit" ReturnAction="Return" />
 }
 
 @code {
@@ -43,7 +42,7 @@ else
         }
     }
 
-    private async Task Editar()
+    private async Task Edit()
     {
         var responseHttp = await repository.PutAsync("/api/Tareas", Tareas);
         if (responseHttp.Error)
@@ -67,6 +66,6 @@ else
     private void Return()
     {
        
-        navigationManager.NavigateTo("/Machinerys");
+        navigationManager.NavigateTo("/Tareas");
     }
 }

@@ -4,7 +4,7 @@
 @inject SweetAlertService sweetAlertService
 @inject IRepository repository
 
-<EditForm Model="tareass" OnSubmit="OnSubmit">
+<EditForm Model="tareas" OnSubmit="OnSubmit">
 
     <DataAnnotationsValidator />
 
@@ -14,8 +14,8 @@
     <div class="mb-3">
         <label>NOMBRE:  </label>
         <div>
-            <InputText width="10" @bind-Value="tareass.Name" />
-            <ValidationMessage For="@(()=>tareass.Name)" />
+            <InputText width="10" @bind-Value="tareas.Name" />
+            <ValidationMessage For="@(()=>tareas.Name)" />
         </div>
 
     </div>
@@ -24,42 +24,44 @@
     <div class="mb-3">
         <label>DESCRIPCION:  </label>
         <div>
-            <InputText width="10" @bind-Value="tareass.Description" />
-            <ValidationMessage For="@(()=>tareass.Description)" />
+            <InputText width="10" @bind-Value="tareas.Description" />
+            <ValidationMessage For="@(()=>tareas.Description)" />
         </div>
 
     </div>
 
-
+     <div class="mb-3">
     <label>FECHA INICIO:  </label>
     <div>
-        <InputDate width="10" @bind-Value="tareass.FechaStart" />
-        <ValidationMessage For="@(()=>tareass.FechaStart)" />
+            <InputDate width="10" @bind-Value="tareas.FechaStart" />
+            <ValidationMessage For="@(()=>tareas.FechaStart)" />
+
     </div>
-    <div>
     </div>
+    
+    
 
     <div class="mb-3">
         <label>FECHA FIN:  </label>
         <div>
-            <InputDate width="10" @bind-Value="tareass.FechaEnd" />
-            <ValidationMessage For="@(()=>tareass.FechaEnd)" />
+            <InputDate width="10" @bind-Value="tareas.FechaEnd" />
+            <ValidationMessage For="@(()=>tareas.FechaEnd)" />
         </div>
     </div>
 
     <div class="mb-3">
         <label>FECHA FIN:  </label>
         <div>
-            <InputDate width="10" @bind-Value="tareass.FechaEnd" />
-            <ValidationMessage For="@(()=>tareass.FechaEnd)" />
+            <InputDate width="10" @bind-Value="tareas.FechaEnd" />
+            <ValidationMessage For="@(()=>tareas.FechaEnd)" />
         </div>
     </div>
 
     <div class="mb-3">
         <label>ID PROYECTO ASIGNADO:  </label>
         <div>
-            <InputNumber width="10" @bind-Value="tareass.ProjectConstrs" />
-            <ValidationMessage For="@(()=>tareass.ProjectConstrs)" />
+            <InputNumber width="10" @bind-Value="tareas.ProjectConstrs" />
+            <ValidationMessage For="@(()=>tareas.ProjectConstrs)" />
         </div>
     </div>
 
@@ -77,11 +79,11 @@
 
     protected override void OnInitialized()
     {
-        editContext = new EditContext(tareass);
+        editContext = new EditContext(tareas);
     }
 
     [Parameter]
-    public Tarea tareass { get; set; }
+    public Tarea tareas { get; set; }
 
     [Parameter]
     public EventCallback OnSubmit { get; set; }
@@ -122,4 +124,7 @@
 
         context.PreventNavigation();
     }
+}
+
+   
 }
